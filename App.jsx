@@ -7,7 +7,7 @@ import Card from './components/Card';
 import styles from './styles/styles';
 
 function getAulasFromAPI() {
-  return fetch('http://172.16.10.211:3333/aulas')
+  return fetch('http://172.16.2.5:3333/aulas')
     .then((response) => response.json())
     .then((aulas) => aulas)
     .catch((error) => console.log(error));
@@ -17,12 +17,20 @@ export default function App() {
   const [text, onChangeText] = useState('');
   const [aulas, setAulas] = useState([]);
   const [filteredAulas, setFilteredAulas] = useState([]);
+  const [periodo, setPeriodo] = useState('noite');
+  const [periodos, setPeriodos] = useState([
+    { label: 'Manhã', value: 'manha' },
+    { label: 'Noite', value: 'noite' },
+  ]);
 
   useEffect(() => {
     getAulasFromAPI().then((aulas) => {
       setAulas(aulas);
       setFilteredAulas(aulas);
     });
+    //newAulas = require('./aulas.json');
+    //setAulas(newAulas);
+    //setFilteredAulas(newAulas);
   }, []);
 
   function getFormattedText(text) {
@@ -35,8 +43,11 @@ export default function App() {
   const findAulasByDisciplinaNome = (text) => {
     setFilteredAulas(
       aulas.filter((aula) => {
-        const disciplinaNome = getFormattedText(aula.disciplina.nome);
-        if (disciplinaNome.includes(getFormattedText(text))) {
+        const disciplinaNome = getFormattedText(aula.disciplina);
+        if (
+          disciplinaNome.includes(getFormattedText(text)) &&
+          aula.periodo == periodo
+        ) {
           return aula;
         }
       })
@@ -48,9 +59,21 @@ export default function App() {
     findAulasByDisciplinaNome(text);
   };
 
+  //const handleOnChangePeriodo = (periodoValueText) => {
+  //  periodoSetValue(periodoValueText);
+  //  findAulasByDisciplinaNome(text);
+  //};
+
   return (
     <View style={styles.App}>
-      <NavBar onChangeText={handleOnChangeText} text={text} />
+      <NavBar
+        onChangeText={handleOnChangeText}
+        text={text}
+        periodoValue={periodo}
+        periodoSetValue={setPeriodo}
+        periodoItems={periodos}
+        periodoSetItems={setPeriodos}
+      />
       <View style={styles.Main}>
         <ScrollView>
           {filteredAulas.map((filteredAula, index) => (

@@ -6,7 +6,14 @@ import Search from './Search';
 
 import { useState } from 'react';
 
-export default function NavBar({ onChangeText, text }) {
+export default function NavBar({
+  onChangeText,
+  text,
+  periodoValue,
+  periodoSetValue,
+  periodoItems,
+  periodoSetItems,
+}) {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.NavBar}>
@@ -25,6 +32,10 @@ export default function NavBar({ onChangeText, text }) {
       <Search
         onChangeText={onChangeText}
         text={text}
+        periodoValue={periodoValue}
+        periodoSetValue={periodoSetValue}
+        periodoItems={periodoItems}
+        periodoSetItems={periodoSetItems}
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
